@@ -1,17 +1,20 @@
 import { erc20Abi } from "@/lib/contracts/erc20abi";
 import { base, baseSepolia, morphHolesky, morphSepolia } from "viem/chains";
 import { NextRequest, NextResponse } from "next/server"
-import { NextApiRequest } from 'next';
 import { encodeFunctionData, http, parseUnits } from "viem";
 import { createPublicClient } from 'viem'
 
-
-export const POST = async (req: NextApiRequest) => {
-  const body = await req.body();
-  // get user address from the body
+export const POST = async (req: NextRequest) => {
+  const body = await req.json();
   const { address } = body;
-  // get the tokenAddress, toAddress, amount and chainId from the query parameters
-  const { chainId, tokenAddress, toAddress, amount } = req.query;
+  const { searchParams } = new URL(req.url);
+
+  // Get paramaters from the url
+  const chainId = searchParams.get('chainId'); //token address
+  const tokenAddress = searchParams.get('tokenAddress'); //token address
+  const toAddress = searchParams.get('toAddress'); //amount in tokenIn
+  const amount = searchParams.get('amount'); //amount in tokenIn
+
   // if chainId is not provided, use the default chainId
   const chain = chainId ? chainId : base.id;
   // if tokenAddress, toAddress, amount are not provided, return an error
