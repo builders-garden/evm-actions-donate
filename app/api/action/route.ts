@@ -13,7 +13,7 @@ export const GET = async (req: NextRequest) => {
       {
         targetUrl: `${appURL()}/api/tx?chainId=${searchParams.get('chainId')}&tokenAddress=${searchParams.get('tokenAddress')}&toAddress=${searchParams.get('toAddress')}&amount=${searchParams.get('amount')}`,
         postUrl: `${appURL()}/tx-success`, // this will be a GET HTTP call
-        label: "Tx",
+        label: "Donate",
         type: ActionLinkType.TX,
       },
     ],
