@@ -3,6 +3,7 @@ import { base, baseSepolia, morphHolesky, morphSepolia } from "viem/chains";
 import { NextRequest, NextResponse } from "next/server";
 import { encodeFunctionData, http, parseUnits } from "viem";
 import { createPublicClient } from "viem";
+import { error } from "console";
 
 export const POST = async (req: NextRequest) => {
   const { searchParams } = new URL(req.url);
@@ -17,7 +18,7 @@ export const POST = async (req: NextRequest) => {
   const chain = chainId ? chainId : baseSepolia.id;
   // if tokenAddress, toAddress, amount are not provided, return an error
   if (!tokenAddress || !toAddress || !amount) {
-    return NextResponse.error;
+    return NextResponse.json({ error: "Missing required parameters" }, { status: 400 });
   }
 
   // Get token decimals
