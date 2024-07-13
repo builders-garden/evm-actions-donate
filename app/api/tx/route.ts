@@ -1,32 +1,30 @@
 import { erc20Abi } from "@/lib/contracts/erc20abi";
 import { base, baseSepolia, morphHolesky, morphSepolia } from "viem/chains";
-import { NextRequest, NextResponse } from "next/server"
+import { NextRequest, NextResponse } from "next/server";
 import { encodeFunctionData, http, parseUnits } from "viem";
-import { createPublicClient } from 'viem'
+import { createPublicClient } from "viem";
 
 export const POST = async (req: NextRequest) => {
-  const body = await req.json();
-  const { address } = body;
   const { searchParams } = new URL(req.url);
 
   // Get paramaters from the url
-  const chainId = searchParams.get('chainId'); //token address
-  const tokenAddress = searchParams.get('tokenAddress'); //token address
-  const toAddress = searchParams.get('toAddress'); //amount in tokenIn
-  const amount = searchParams.get('amount'); //amount in tokenIn
+  const chainId = searchParams.get("chainId"); //token address
+  const tokenAddress = searchParams.get("tokenAddress"); //token address
+  const toAddress = searchParams.get("toAddress"); //amount in tokenIn
+  const amount = searchParams.get("amount"); //amount in tokenIn
 
   // if chainId is not provided, use the default chainId
-  const chain = chainId ? chainId : base.id;
+  const chain = chainId ? chainId : baseSepolia.id;
   // if tokenAddress, toAddress, amount are not provided, return an error
   if (!tokenAddress || !toAddress || !amount) {
     return NextResponse.error;
   }
 
   // Get token decimals
-  const publicClient = createPublicClient({ 
-    chain: base,
-    transport: http()
-  })
+  const publicClient = createPublicClient({
+    chain: baseSepolia, // chain to use for
+    transport: http(),
+  });
 
   // check token decimals
   let decimals = 18;
@@ -72,6 +70,6 @@ export const POST = async (req: NextRequest) => {
   }
 
   return NextResponse.json({
-    transactions: transactions,
+    transactions,
   });
 };
