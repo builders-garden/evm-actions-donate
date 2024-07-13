@@ -52,7 +52,6 @@ export const POST = async (req: NextApiRequest) => {
     transactions = [
       {
         chainId: chain,
-        abi: "",
         to: toAddress as `0x${string}`,
         data: "",
         value: bigIntAmount.toString(),
@@ -62,7 +61,6 @@ export const POST = async (req: NextApiRequest) => {
     transactions = [
       {
         chainId: chain,
-        abi: erc20Abi,
         to: tokenAddress as `0x${string}`,
         data: transferCalldata,
         value: BigInt(0).toString(),
