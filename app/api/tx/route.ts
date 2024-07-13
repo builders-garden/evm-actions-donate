@@ -39,21 +39,38 @@ export const POST = async (req: NextApiRequest) => {
   // Prepare amount to transfer
   const bigIntAmount = BigInt(parseUnits(amount as string, decimals));
 
-  // Transfering 1 USDC to yourself
+  // Transfer calldata
   const transferCalldata = encodeFunctionData({
     abi: erc20Abi,
     functionName: "transfer",
     args: [toAddress as `0x${string}`, bigIntAmount],
   });
 
+  // Prepare transactions
+  let transactions = [];
+  if (isNativeToken) {
+    transactions = [
+      {
+        chainId: chain,
+        abi: "",
+        to: toAddress as `0x${string}`,
+        data: "",
+        value: bigIntAmount.toString(),
+      },
+    ];
+  } else {
+    transactions = [
+      {
+        chainId: chain,
+        abi: erc20Abi,
+        to: tokenAddress as `0x${string}`,
+        data: transferCalldata,
+        value: BigInt(0).toString(),
+      },
+    ];
+  }
+
   return NextResponse.json({
-    chainId: `eip155:${chain}`, 
-    method: "eth_sendTransaction",
-    params: {
-      abi: erc20Abi,
-      to: tokenAddress,
-      data: isNativeToken ? "" : transferCalldata,
-      value: isNativeToken ? bigIntAmount.toString() : BigInt(0).toString(),
-    },
+    transactions: transactions,
   });
 };
