@@ -31,7 +31,7 @@ export const POST = async (req: NextRequest) => {
 
   // Get token decimals
   const publicClient = createPublicClient({
-    chain: baseSepolia, // chain to use for
+    chain: viemChain, // chain to use for
     transport: http(),
   });
 
