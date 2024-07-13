@@ -6,8 +6,8 @@ export const GET = async (req: NextRequest) => {
   const { searchParams } = new URL(req.url);
 
   const evmActionMetadata: EVMAction = {
-    title: "Transfer EVM Action",
-    description: "This is a sample EVM Action for transferring tokens",
+    title: "Donate EVM Action",
+    description: `This is a donation EVM action! You'll send ${searchParams.get('amount')} ${searchParams.get('tokenAddress')} to ${searchParams.get('toAddress')} on chain ${searchParams.get('chainId')}`,
     image: `${appURL()}/landing.png`,
     links: [
       {
