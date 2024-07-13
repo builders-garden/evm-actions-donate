@@ -1,9 +1,11 @@
 import { erc20Abi } from "@/lib/contracts/erc20abi";
 import { base, baseSepolia, morphHolesky, morphSepolia } from "viem/chains";
 import { NextRequest, NextResponse } from "next/server";
-import { encodeFunctionData, http, parseUnits } from "viem";
+import { encodeFunctionData, extractChain, http, parseUnits } from "viem";
 import { createPublicClient } from "viem";
 import { error } from "console";
+import * as chains from 'viem/chains'
+
 
 export const POST = async (req: NextRequest) => {
   const { searchParams } = new URL(req.url);
@@ -15,11 +17,17 @@ export const POST = async (req: NextRequest) => {
   const amount = searchParams.get("amount"); //amount in tokenIn
 
   // if chainId is not provided, use the default chainId
-  const chain = chainId ? chainId : baseSepolia.id;
+  const chain = chainId ? Number(chainId) : baseSepolia.id;
   // if tokenAddress, toAddress, amount are not provided, return an error
   if (!tokenAddress || !toAddress || !amount) {
     return NextResponse.json({ error: "Missing required parameters" }, { status: 400 });
   }
+
+  const viemChain = extractChain({
+    chains: Object.values(chains),
+    // @ts-ignore
+    id: chain,
+  })
 
   // Get token decimals
   const publicClient = createPublicClient({
